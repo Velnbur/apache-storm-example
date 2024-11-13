@@ -23,6 +23,12 @@ public class TransactionTopology {
         builder.setBolt("FraudDetectionCSVWriterBolt", new FraudDetectionCSVWriterBolt())
                .shuffleGrouping("FraudDetectionBolt");
 
+	builder.setBolt("TransactionBucketBolt", new TransactionBucketBolt())
+               .shuffleGrouping("TransactionSpout");
+
+	builder.setBolt("TransactionBucketCSVWriterBolt", new TransactionBucketCSVWriterBolt())
+               .shuffleGrouping("TransactionBucketBolt");
+
         Config config = new Config();
         config.setDebug(true);
 

@@ -2,6 +2,7 @@ import sqlite3
 from faker import Faker
 import random
 from pathlib import Path
+from datetime import datetime, timedelta
 
 database_file = Path("database.sqlite")
 migration = Path("migrations/001_init.sql")
@@ -54,13 +55,23 @@ cursor.executemany(
     "INSERT INTO accounts (balance, creator, bank) VALUES (?, ?, ?)", accounts
 )
 
+start_date = datetime(2023, 1, 1)
+end_date = datetime(2024, 12, 31)
+
+def random_timestamp():
+    # Generate a random number of seconds between the start and end dates
+    time_between_dates = end_date - start_date
+    random_seconds = random.randint(0, int(time_between_dates.total_seconds()))
+    # Add the random seconds to the start date
+    return start_date + timedelta(seconds=random_seconds)
+
 # Populate transactions
 transactions = [
-    (random.randint(1, 1000), random.randint(1, NUM_ACCOUNTS), random.randint(1, NUM_ACCOUNTS))
+    (random.randint(1, 1000), random_timestamp(), random.randint(1, NUM_ACCOUNTS), random.randint(1, NUM_ACCOUNTS))
     for _ in range(NUM_TRANSACTIONS)
 ]
 cursor.executemany(
-    "INSERT INTO transactions (amount, sender, receiver) VALUES (?, ?, ?)", transactions
+    "INSERT INTO transactions (amount, timestamp, sender, receiver) VALUES (?, ?, ?, ?)", transactions
 )
 
 conn.commit()
