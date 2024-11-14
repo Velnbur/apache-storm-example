@@ -1,6 +1,7 @@
 import sqlite3
 from faker import Faker
 import random
+import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta
 
@@ -61,13 +62,20 @@ end_date = datetime(2024, 12, 31)
 def random_timestamp():
     # Generate a random number of seconds between the start and end dates
     time_between_dates = end_date - start_date
-    random_seconds = random.randint(0, int(time_between_dates.total_seconds()))
+    max_seconds = int(time_between_dates.total_seconds())
+    random_seconds = min(max(0, random.gauss(mu=14_515_200, sigma=7_257_600)), max_seconds)
     # Add the random seconds to the start date
-    return start_date + timedelta(seconds=random_seconds)
+    return (start_date + timedelta(seconds=random_seconds)).strftime("%Y-%m-%d %H:%M:%S.%f")
+
+def random_amount():
+    min_v = 1
+    max_v = 100_000
+    
+    return min(max(min_v, random.gauss(mu=2_500, sigma=2000)), max_v)
 
 # Populate transactions
 transactions = [
-    (random.randint(1, 1000), random_timestamp(), random.randint(1, NUM_ACCOUNTS), random.randint(1, NUM_ACCOUNTS))
+    (random_amount(), random_timestamp(), random.randint(1, NUM_ACCOUNTS), random.randint(1, NUM_ACCOUNTS))
     for _ in range(NUM_TRANSACTIONS)
 ]
 cursor.executemany(

@@ -17,7 +17,7 @@ public class TransactionBucketCSVWriterBolt extends BaseRichBolt {
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
         try (FileWriter writer = new FileWriter(CSV_FILE_PATH)) {
-            writer.write("Bucket 1,Bucket 2,Bucket 3,Bucket 4,Bucket 5\n");
+            writer.write("Bucket 1,Bucket 2,Bucket 3,Bucket 4,Bucket 5,Bucket 6,Bucket 7,Bucket 8\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,12 +26,15 @@ public class TransactionBucketCSVWriterBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         try (FileWriter writer = new FileWriter(CSV_FILE_PATH, true)) {
-            writer.write(String.format("%d,%d,%d,%d,%d\n",
-                tuple.getIntegerByField("Bucket 1"),
-                tuple.getIntegerByField("Bucket 2"),
-                tuple.getIntegerByField("Bucket 3"),
-                tuple.getIntegerByField("Bucket 4"),
-                tuple.getIntegerByField("Bucket 5")));
+            writer.write(String.format("%d,%d,%d,%d,%d,%d,%d,%d\n",
+				       tuple.getIntegerByField("Bucket 1"),
+				       tuple.getIntegerByField("Bucket 2"),
+				       tuple.getIntegerByField("Bucket 3"),
+				       tuple.getIntegerByField("Bucket 4"),
+				       tuple.getIntegerByField("Bucket 5"),
+				       tuple.getIntegerByField("Bucket 6"),
+				       tuple.getIntegerByField("Bucket 7"),
+				       tuple.getIntegerByField("Bucket 8")));
         } catch (IOException e) {
             e.printStackTrace();
         }

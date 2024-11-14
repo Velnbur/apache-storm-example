@@ -41,7 +41,7 @@ public class FraudDetectionBolt extends BaseRichBolt {
             lastTransactionAmount.put(sender, amount);
         } else if (sourceComponent.equals("TransactionStatisticsBolt")) {
             String timestamp = tuple.getStringByField("timestamp");
-            int averageAmount = tuple.getIntegerByField("average");
+            double averageAmount = tuple.getDoubleByField("average");
 
             if (averageAmount > MAX_AVERAGE_AMOUNT) {
                 for (Integer account : transactionCounts.keySet()) {

@@ -30,12 +30,12 @@ public class TransactionTopology {
                .shuffleGrouping("TransactionBucketBolt");
 
         Config config = new Config();
-        config.setDebug(true);
+        // config.setDebug(true);
 
         LocalCluster cluster = new LocalCluster();
         try {
             cluster.submitTopology("TransactionTopology", config, builder.createTopology());
-            Utils.sleep(20 * 60 * 1000); // Let it run for 20 minutes
+            Utils.sleep(35 * 60 * 1000); // Let it run for 20 minutes
         } finally {
             cluster.shutdown();
         }

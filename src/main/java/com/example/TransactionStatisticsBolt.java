@@ -7,15 +7,19 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.HashMap;
 
 public class TransactionStatisticsBolt extends BaseRichBolt {
+    public static Logger logger = LoggerFactory.getLogger(TransactionStatisticsBolt.class);
     private OutputCollector collector;
-    private int sum = 0;
+    private double average = 0.0;
     private int count = 0;
-    private int min = Integer.MAX_VALUE;
-    private int max = Integer.MIN_VALUE;
+    private int min = 500_000;
+    private int max = 0;
 
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
@@ -29,9 +33,9 @@ public class TransactionStatisticsBolt extends BaseRichBolt {
 
         if (amount < min) min = amount;
         if (amount > max) max = amount;
-        sum += amount;
-        count++;
-        int average = sum / count;
+	
+        average = (average * count + amount) / (count+1);
+	count++;
 
         collector.emit(new Values(timestamp, average, min, max));
     }

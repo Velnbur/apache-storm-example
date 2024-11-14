@@ -27,12 +27,12 @@ public class TransactionStatisticsCSVWriterBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         String timestamp = tuple.getStringByField("timestamp");
-        int average = tuple.getIntegerByField("average");
+        double average = tuple.getDoubleByField("average");
         int min = tuple.getIntegerByField("min");
         int max = tuple.getIntegerByField("max");
 
         try (FileWriter writer = new FileWriter(CSV_FILE_PATH, true)) {
-            writer.write(String.format("%s,%d,%d,%d\n", timestamp, average, min, max));
+            writer.write(String.format("%s,\"%f\",%d,%d\n", timestamp, average, min, max));
         } catch (IOException e) {
             e.printStackTrace();
         }
